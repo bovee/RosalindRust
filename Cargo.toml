@@ -1,0 +1,9 @@
+[package]
+
+name = "rosalind-rust"
+version = "0.0.1"
+authors = [ "Roderick Bovee" ]
+
+[lib]
+name = "bio"
+path = "src/lib.rs"
