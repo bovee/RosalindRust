@@ -1,9 +1,17 @@
-// FIXME: not finished
-use std::collection::TreeMap;
+use std::collections::TreeMap;
+use std::str;
+use std::io;
  
 
 fn main() {
-    println!("{}", "UUUCUU");
+    let input: String = io::stdin().read_line().unwrap();
+    println!("{}", rna_to_prot(input.as_slice().trim()));
+}
+
+#[test]
+fn test_rna_to_prot() {
+    assert!(rna_to_prot("AGAUUU").as_slice() == "RF");
+    assert!(rna_to_prot("AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGG").as_slice() == "MAMAPRTEINSTRING");
 }
 
 fn rna_to_prot(rna_seq: &str) -> String {
@@ -74,15 +82,16 @@ fn rna_to_prot(rna_seq: &str) -> String {
     codon_table.insert("GGG", "G");
     
     let mut s = String::new();
-    // TODO: will not work
-    let char_iter = rna_seq.chars();
-    loop {
-        match rna_seq.take(3) {
-            Some(chars) => {
-                s.push_str(match map.find(&base) { Some(aa) => aa, None => "?" });
-            },
-            None => { break; }
+    // TODO: this should be iterating over unicode points instead?
+    let codons = rna_seq.as_bytes();
+
+    for codon in codons.chunks(3) {
+        let c = str::from_utf8(codon).unwrap();
+        let aa = match codon_table.find(&c) {
+            Some(&aa) => aa, 
+            None => "?"
         };
+        s.push_str(aa);
     };
     return s;
 }
