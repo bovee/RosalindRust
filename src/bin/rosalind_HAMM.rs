@@ -1,11 +1,12 @@
+#![feature(old_io)]
 extern crate bio;
 
-use std::io;
+use std::old_io::{stdin};
 use bio::hamming_dist;
  
 
 fn main() {
-    let mut stdin = io::stdin();
+    let mut stdin = stdin();
     let line1 = stdin.read_line().unwrap();
     let line2 = stdin.read_line().unwrap();
     let l1 = line1.as_slice();

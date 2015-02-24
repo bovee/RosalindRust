@@ -1,11 +1,11 @@
 #![crate_name = "bio"]
 
-use std::collections::TreeMap;
+use std::collections::HashMap;
 use std::str;
 
 pub fn gc(dna: &str) -> f32 {
-    let mut gc_count: int = 0;
-    let mut num_chars: int = 0;
+    let mut gc_count: i32 = 0;
+    let mut num_chars: i32 = 0;
     for chr in dna.trim().chars() {
         gc_count += match chr {
             'G' | 'C' | 'g' | 'c' => 1,
@@ -17,8 +17,8 @@ pub fn gc(dna: &str) -> f32 {
 }
 
 
-pub fn hamming_dist(str1: &str, str2: &str) -> int {
-    let mut dif_chars: int = 0;
+pub fn hamming_dist(str1: &str, str2: &str) -> i32 {
+    let mut dif_chars: i32 = 0;
     for (c1, c2) in str1.chars().zip(str2.chars()) {
         if c1 != c2 {
             dif_chars += 1;
@@ -35,7 +35,8 @@ fn test_rna_to_prot() {
 }
 
 pub fn rna_to_prot(rna_seq: &str) -> String {
-    let mut codon_table = TreeMap::new();
+    let mut codon_table = HashMap::new();
+    // TODO: load this from an external file
     codon_table.insert("UUU", "F");
     codon_table.insert("CUU", "L");
     codon_table.insert("AUU", "I");
@@ -107,7 +108,7 @@ pub fn rna_to_prot(rna_seq: &str) -> String {
 
     for codon in codons.chunks(3) {
         let c = str::from_utf8(codon).unwrap();
-        let aa = match codon_table.find(&c) {
+        let aa = match codon_table.get(&c) {
             Some(&aa) => aa, 
             None => "?"
         };
@@ -131,15 +132,15 @@ pub fn revc(dna: &str) {
 }
 
 
-#[deriving(Show)]
+#[derive(Debug)]
 pub struct MovingWindow<'a> {
     wrapped_str: &'a str,
-    loc: uint,
-    size: uint,
+    loc: usize,
+    size: usize,
 }
 
 impl<'a> MovingWindow<'a> {
-    pub fn new(wrapped_str: &'a str, size: uint) -> MovingWindow<'a> {
+    pub fn new(wrapped_str: &'a str, size: usize) -> MovingWindow<'a> {
         MovingWindow {
             wrapped_str: wrapped_str,
             loc: 0,
@@ -148,7 +149,9 @@ impl<'a> MovingWindow<'a> {
     }
 }
 
-impl<'a> Iterator<&'a str> for MovingWindow<'a> {
+impl<'a> Iterator for MovingWindow<'a> {
+    type Item = &'a str;
+
     fn next(&mut self) -> Option<&'a str> {
         self.loc += 1;
         if self.loc + self.size - 1 <= self.wrapped_str.len() {
@@ -158,3 +161,14 @@ impl<'a> Iterator<&'a str> for MovingWindow<'a> {
         }
     }
 }
+
+//impl<'a> Iterator<&'a str> for MovingWindow<'a> {
+//    fn next(&mut self) -> Option<&'a str> {
+//        self.loc += 1;
+//        if self.loc + self.size - 1 <= self.wrapped_str.len() {
+//            Some(self.wrapped_str.slice(self.loc - 1, self.loc + self.size - 1))
+//        } else {
+//            None
+//        }
+//    }
+//}

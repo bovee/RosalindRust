@@ -1,13 +1,16 @@
-use std::io;
+#![feature(old_io)]
+#![feature(unicode)]
+use std::old_io::{stdin};
  
 
 fn main() {
-    let mut a_count : int = 0;
-    let mut t_count : int = 0;
-    let mut g_count : int = 0;
-    let mut c_count : int = 0;
-
-    for chr in io::stdin().chars() {
+    let mut a_count : i32 = 0;
+    let mut t_count : i32 = 0;
+    let mut g_count : i32 = 0;
+    let mut c_count : i32 = 0;
+    
+    let mut stdin = stdin();
+    for chr in stdin.lock().chars() {
         let c = chr.unwrap().to_uppercase();
         if c == 'A' {
             a_count = a_count + 1;

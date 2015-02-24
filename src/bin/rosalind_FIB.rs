@@ -1,14 +1,15 @@
-use std::io;
+#![feature(old_io)]
+use std::old_io::{stdin};
 
 
 fn main() {
     loop {
-        let input: String = io::stdin().read_line().unwrap();
-        let nums: Vec<&str> = input.as_slice().split(' ').collect();
-        let opt_n: Option<int> = from_str(nums[0].trim());
-        let opt_k: Option<int> = from_str(nums[1].trim());
+        let input: String = stdin().read_line().unwrap();
+        let nums: Vec<&str> = input.split(' ').collect();
+        let opt_n = nums[0].trim().parse::<i32>();
+        let opt_k = nums[1].trim().parse::<i32>();
         match (opt_n, opt_k) {
-            (Some(n), Some(k)) => {
+            (Ok(n), Ok(k)) => {
                 println!("{}", fib(n, k));
             },
             (_, _) => {
@@ -19,7 +20,7 @@ fn main() {
     }
 }
 
-fn fib(n: int, k: int) -> int {
+fn fib(n: i32, k: i32) -> i32 {
     match n {
         0 => 0,
         1 => 1,

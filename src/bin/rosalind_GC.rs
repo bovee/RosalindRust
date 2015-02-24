@@ -1,6 +1,7 @@
+#![feature(old_io)]
 extern crate bio;
 
-use std::io;
+use std::old_io::{stdin};
 use bio::gc;
 
 
@@ -10,22 +11,21 @@ fn main() {
     let mut cur_name: String = String::new();
     let mut cur_seq: String = String::new();
 
-    for l in io::stdin().lines().map(|x| x.unwrap()) {
-        let line = l.as_slice();
-         
-        if line.slice(0, 1) == ">" {
-            if gc(cur_seq.as_slice()) > max_gc {
-                max_gc = gc(cur_seq.as_slice());
+    let mut stdin = stdin();
+    for l in stdin.lock().lines().map(|x| x.unwrap()) {
+        if &l[0..1] == ">" {
+            if gc(&cur_seq) > max_gc {
+                max_gc = gc(&cur_seq);
                 max_gc_name = cur_name.to_string();
             };
-            cur_name = String::from_str(line.slice_from(1));
+            cur_name = l[1..].to_string();
             cur_seq = String::new();
         } else {
-            cur_seq.push_str(line.trim());
+            cur_seq.push_str(l.trim());
         };
     };
-    if gc(cur_seq.as_slice()) > max_gc {
-        max_gc = gc(cur_seq.as_slice());
+    if gc(&cur_seq[..]) > max_gc {
+        max_gc = gc(&cur_seq);
         max_gc_name = cur_name.to_string();
     };
     println!("{}", max_gc_name);

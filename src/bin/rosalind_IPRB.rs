@@ -1,12 +1,13 @@
-use std::io;
+#![feature(old_io)]
+use std::old_io::{stdin};
  
 
 fn main() {
-    let input: String = io::stdin().read_line().unwrap();
-    let nums: Vec<&str> = input.as_slice().trim().split(' ').collect();
-    let k: f32 = from_str(nums[0]).unwrap();
-    let m: f32 = from_str(nums[1]).unwrap();
-    let n: f32 = from_str(nums[2]).unwrap();
+    let input: String = stdin().read_line().unwrap();
+    let nums: Vec<&str> = input.trim().split(' ').collect();
+    let k: f32 = nums[0].parse().unwrap();
+    let m: f32 = nums[1].parse().unwrap();
+    let n: f32 = nums[2].parse().unwrap();
     let inv_odds = ((n * (n - 1.)) + 0.25 * (m * (m - 1.)) + m * n) / ((k + m + n) * (k + m + n - 1.));
     let odds = 1. - inv_odds;
     println!("{}", odds);

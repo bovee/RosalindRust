@@ -1,7 +1,10 @@
-use std::io;
+#![feature(old_io)]
+#![feature(unicode)]
+use std::old_io::{stdin};
 
 fn main() {
-    for chr in io::stdin().chars() {
+    let mut stdin = stdin();
+    for chr in stdin.lock().chars() {
         let chr = chr.ok().unwrap().to_uppercase();
         let rna_chr = match chr {
             'T' => 'U',
