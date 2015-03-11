@@ -1,5 +1,3 @@
-#![feature(unicode)]
-#![feature(fs)]
 #![feature(io)]
 #![feature(path)]
 
@@ -15,7 +13,6 @@ pub mod fasta;
 #[test]
 fn test_gc() {
     assert_eq!(gc("AAGC"), 0.5);
-
 }
 
 pub fn gc(dna: &str) -> f32 {
@@ -31,6 +28,10 @@ pub fn gc(dna: &str) -> f32 {
     return (gc_count as f32) / (num_chars as f32);
 }
 
+#[test]
+fn test_hamming_dist() {
+    assert_eq!(hamming_dist("AAGC", "AAGT"), 1);
+}
 
 pub fn hamming_dist(str1: &str, str2: &str) -> i32 {
     let mut dif_chars: i32 = 0;
@@ -132,10 +133,14 @@ pub fn rna_to_prot(rna_seq: &str) -> String {
     return s;
 }
 
+#[test]
+fn test_revc() {
+
+}
 
 pub fn revc(dna: &str) {
     for chr in dna.chars().rev() {
-        let rev_comp = match chr.to_uppercase() {
+        let rev_comp = match chr.to_uppercase().next().unwrap() {
             'A' => 'T',
             'T' => 'A',
             'G' => 'C',

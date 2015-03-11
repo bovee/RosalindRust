@@ -9,4 +9,4 @@ the code here (probably) does not follow best practices, but hopefully it
 provides some useful examples.
 
 
-The code should work with Rust 1.0, but uses `old_io` so it may not work beyond that.
+The code should work with Rust 1.0, but some parts use `old_io` so they may not work beyond that.
