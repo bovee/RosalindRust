@@ -1,12 +1,14 @@
-#![feature(old_io)]
+#![feature(io)]
 extern crate bio;
 
-use std::old_io::{stdin};
+use std::io::BufReadExt;
+use std::io;
 
 use bio::rna_to_prot;
 
  
 fn main() {
-    let input: String = stdin().read_line().unwrap();
-    println!("{}", rna_to_prot(input.as_slice().trim()));
+    let stdin = io::stdin();
+    let input: String = stdin.lock().lines().next().unwrap().unwrap();
+    println!("{}", rna_to_prot(input.trim()));
 }

@@ -1,7 +1,22 @@
+#![feature(unicode)]
+#![feature(fs)]
+#![feature(io)]
+#![feature(path)]
+
 #![crate_name = "bio"]
+
+#[allow(unused_attributes)]
 
 use std::collections::HashMap;
 use std::str;
+
+pub mod fasta;
+
+#[test]
+fn test_gc() {
+    assert_eq!(gc("AAGC"), 0.5);
+
+}
 
 pub fn gc(dna: &str) -> f32 {
     let mut gc_count: i32 = 0;
@@ -155,7 +170,7 @@ impl<'a> Iterator for MovingWindow<'a> {
     fn next(&mut self) -> Option<&'a str> {
         self.loc += 1;
         if self.loc + self.size - 1 <= self.wrapped_str.len() {
-            Some(self.wrapped_str.slice(self.loc - 1, self.loc + self.size - 1))
+            Some(&self.wrapped_str[(self.loc - 1)..(self.loc + self.size - 1)])
         } else {
             None
         }

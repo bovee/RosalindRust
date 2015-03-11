@@ -1,50 +1,35 @@
-//#![feature(old_io)]
-//// FIXME: unfinished
-//use std::old_io::{BufferedReader, File};
-//
-fn main() {
+#![feature(path)]
+extern crate bio;
 
+use std::path::Path;
+use std::collections::HashMap;
+
+fn main() {
+    let mut endings: HashMap<String, Vec<String>> = HashMap::new();
+    let path = Path::new("rosalind_grph.txt");
+    for (seq, id) in bio::fasta::FASTAReader::new(&path) {
+        let id = id.unwrap();
+        let se = seq.len() - 3;
+        if endings.contains_key(&seq[se..]) {
+            let mut values = endings.get_mut(&seq[se..]).unwrap();
+            values.push(id);
+            //endings.insert(seq[-3..].to_string(), values);
+        } else {
+            endings.insert(seq[se..].to_string(), vec![id]);
+        }
+    }
+    for (seq, id) in bio::fasta::FASTAReader::new(&path) {
+        let id = id.unwrap();
+        match endings.get(&seq[..3]) {
+            Some(first_ids) => {
+                for first_id in first_ids.iter() {
+                    if first_id != &id {
+                        println!("{} {}", first_id, id);
+                    }
+                }
+            },
+            None => {}
+        }
+    }
 }
-//
-//// #[deriving(Show)]
-//pub struct FASTAReader<'a> {
-//    cur_id: Option<String>,
-//    cur_seq: String,
-//    line_itr: &'a Iterator<Item=&'a Result>,
-//    // line_itr: io::Lines<&'a str>,
-//}
-//
-//impl<'a> FASTAReader<'a> {
-//    pub fn new(file_h: &'a Path) -> FASTAReader<'a> {
-//        FASTAReader {
-//            cur_id: None,
-//            cur_seq: String::from_str(""),
-//            line_itr: &BufferedReader::new(File::open(file_h)).lines(),
-//        }
-//    }
-//}
-//
-//impl<'a> Iterator for FASTAReader<'a> {
-//    type Item = Option<(&'a str, &'a Option<str>)>;
-//
-//    fn next(&mut self) -> Option<(&'a str, &'a Option<str>)> {
-//        loop {
-//            match self.line_itr.next() {
-//                None => {
-//                    return Some((self.cur_seq.as_slice(), self.cur_id.unwrap().to_string()));
-//                },
-//                Some(l) => {
-//                    let line = l.as_slice();
-//                     
-//                    if line.slice(0, 1) == ">" {
-//                        return Some((self.cur_seq.as_slice(), self.cur_id.unwrap().to_string()));
-//                        self.cur_id = Some(String::from_str(line.slice_from(1)));
-//                        self.cur_seq = String::new();
-//                    } else {
-//                        self.cur_seq.push_str(line.trim());
-//                    };
-//                },
-//            };
-//        };
-//    }
-//}
+
