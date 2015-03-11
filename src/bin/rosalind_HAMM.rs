@@ -1,14 +1,14 @@
-#![feature(old_io)]
+#![feature(io)]
 extern crate bio;
 
-use std::old_io::{stdin};
+use std::io::BufReadExt;
 use bio::hamming_dist;
  
 
 fn main() {
-    let mut stdin = stdin();
-    let line1 = stdin.read_line().unwrap();
-    let line2 = stdin.read_line().unwrap();
+    let stdin = std::io::stdin();
+    let line1 = stdin.lock().lines().next().unwrap().unwrap();
+    let line2 = stdin.lock().lines().next().unwrap().unwrap();
     println!("{}", hamming_dist(&line1, &line2));
     //println!("{}", l1.lev_distance(l2));
 }

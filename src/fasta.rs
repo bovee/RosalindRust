@@ -1,15 +1,23 @@
 use std::path::Path;
 use std::fs::File;
-use std::io::{BufReader, BufReadExt, Lines};
+use std::io::{BufReader, BufReadExt, Read, Lines};
 
-pub struct FASTAReader {
+pub struct FASTAReader<T> {
     cur_id: Option<String>,
     cur_seq: String,
-    line_itr: Lines<BufReader<File>>, //Lines<BufReadExt>,
+    line_itr: Lines<BufReader<T>>,
 }
 
-impl FASTAReader {
-    pub fn new(file_h: &Path) -> FASTAReader {
+impl<T: Read> FASTAReader<T> {
+    pub fn new(r: T) -> FASTAReader<T> {
+        let br = BufReader::new(r);
+        FASTAReader {
+            cur_id: None,
+            cur_seq: String::new(),
+            line_itr: br.lines(),
+        }
+    }
+    pub fn from_path(file_h: &Path) -> FASTAReader<File> {
         let br = BufReader::new(File::open(file_h).unwrap());
         FASTAReader {
             cur_id: None,
@@ -19,7 +27,7 @@ impl FASTAReader {
     }
 }
 
-impl Iterator for FASTAReader {
+impl<T: Read> Iterator for FASTAReader<T> {
     type Item = (String, Option<String>);
 
     fn next(&mut self) -> Option<(String, Option<String>)> {

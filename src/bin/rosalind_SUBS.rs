@@ -1,15 +1,13 @@
-#![feature(old_io)]
-//extern crate regex;
+#![feature(io)]
 extern crate bio;
 
-use std::old_io::{stdin};
-
+use std::io::BufReadExt;
 use bio::MovingWindow;
-//use regex::Regex;
 
 fn main () {
-    let fullstr: String = stdin().read_line().unwrap();
-    let substr: String = stdin().read_line().unwrap();
+    let stdin = std::io::stdin();
+    let fullstr: String = stdin.lock().lines().next().unwrap().unwrap();
+    let substr: String = stdin.lock().lines().next().unwrap().unwrap();
 
     for i in substr_locs(fullstr.trim(), substr.trim()).iter() {
         print!("{} ", i);

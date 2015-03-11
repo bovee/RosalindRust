@@ -7,6 +7,7 @@
 
 use std::collections::HashMap;
 use std::str;
+use std::ascii::AsciiExt;
 
 pub mod fasta;
 
@@ -140,7 +141,7 @@ fn test_revc() {
 
 pub fn revc(dna: &str) {
     for chr in dna.chars().rev() {
-        let rev_comp = match chr.to_uppercase().next().unwrap() {
+        let rev_comp = match chr.to_ascii_uppercase() {
             'A' => 'T',
             'T' => 'A',
             'G' => 'C',
@@ -181,14 +182,3 @@ impl<'a> Iterator for MovingWindow<'a> {
         }
     }
 }
-
-//impl<'a> Iterator<&'a str> for MovingWindow<'a> {
-//    fn next(&mut self) -> Option<&'a str> {
-//        self.loc += 1;
-//        if self.loc + self.size - 1 <= self.wrapped_str.len() {
-//            Some(self.wrapped_str.slice(self.loc - 1, self.loc + self.size - 1))
-//        } else {
-//            None
-//        }
-//    }
-//}

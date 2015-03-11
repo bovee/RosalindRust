@@ -1,17 +1,17 @@
+#![feature(io)]
 #![feature(path)]
 extern crate bio;
 
-use std::path::Path;
 use bio::gc;
+use bio::fasta::FASTAReader;
 
 
 fn main() {
     let mut max_gc: f32 = 0f32;
     let mut max_gc_name: String = String::new();
 
-    let path = Path::new("test_files/rosalind_gc.txt");
-
-    for (seq, id) in bio::fasta::FASTAReader::new(&path) {
+    let stdin = std::io::stdin();
+    for (seq, id) in FASTAReader::new(stdin.lock()) {
         if gc(&seq) > max_gc {
             max_gc = gc(&seq);
             max_gc_name = id.unwrap();

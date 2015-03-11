@@ -1,11 +1,10 @@
 #![feature(io)]
 
-use std::io;
 use std::io::BufReadExt;
 use std::collections::HashSet;
 
 fn main() {
-    let stdin = io::stdin();
+    let stdin = std::io::stdin();
     let r = stdin.lock();
     let mut r_lines = r.lines();
 
